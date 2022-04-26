@@ -291,8 +291,8 @@ jQuery(function ($) {
     var $noty = $doc.find('#mcd_noty_wrap');
     if (!$noty.length) {
       var $wrap = $('<div>', {
-          id: 'mcd_noty_wrap',
-        }),
+        id: 'mcd_noty_wrap',
+      }),
         $content = $('<div>', {
           id: 'mcd_noty_content',
           class: 'mcd_' + status,
@@ -483,6 +483,7 @@ jQuery(function ($) {
 
   function downloadAllOne() {
     inMerge = true;
+    metaWebsite = prompt('Enter website to get metadata:');
     downloadAll();
   }
 
@@ -551,10 +552,10 @@ jQuery(function ($) {
 
           noty(
             '<a href="' +
-              URL.createObjectURL(zipFile) +
-              '" download="' +
-              zipName +
-              '"><strong>Click vào đây</strong></a> nếu trình duyệt không tự tải xuống',
+            URL.createObjectURL(zipFile) +
+            '" download="' +
+            zipName +
+            '"><strong>Click vào đây</strong></a> nếu trình duyệt không tự tải xuống',
             'success',
           );
           linkSuccess();
@@ -688,6 +689,17 @@ jQuery(function ($) {
           next();
         },
       );
+    }
+    if (dlCurrent === max && inMerge && metaWebsite.length > 0) {
+      // Split /, :, .
+      metaWebsite = metaWebsite.split(/\/|:|\./).filter(x => x.length && x !== 'https' && x !== 'http' && x !== 'www');
+      zipObj['meta.txt'] = [
+        fflate.strToU8(metaWebsite[0] + '\r\n' + metaWebsite.at(-1) + '\r\n' + 'vi'),
+        {
+          level: 0,
+        },
+      ];
+      next();
     }
   }
 
@@ -1192,14 +1204,14 @@ jQuery(function ($) {
   }
 
   var configsDefault = {
-      reverse: true,
-      link: '',
-      name: '',
-      contents: '',
-      imgSrc: '',
-      filter: false,
-      init: getSource,
-    },
+    reverse: true,
+    link: '',
+    name: '',
+    contents: '',
+    imgSrc: '',
+    filter: false,
+    init: getSource,
+  },
     configs,
     chapName,
     domainName = location.host,
@@ -1216,7 +1228,8 @@ jQuery(function ($) {
     inProgress = false,
     inAuto = false,
     inCustom = false,
-    inMerge = false;
+    inMerge = false,
+    metaWebsite = '';
 
   GM_registerMenuCommand('Download All Chapters', downloadAll);
   GM_registerMenuCommand('Download All To One File', downloadAllOne);

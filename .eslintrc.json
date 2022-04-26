@@ -14,15 +14,11 @@
     "jEpub": false,
     "GM_config": false
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "prettier"
+  ],
   "rules": {
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "linebreak-style": [
       "error",
       "unix"
